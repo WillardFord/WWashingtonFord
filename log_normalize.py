@@ -1,23 +1,10 @@
 import numpy as np
 import pandas as pd
-import argparse
-#import gp
-
-parser = argparse.ArgumentParser()
-
-parser.add_argument("-f", "--filename",
-                    type=str,
-                    help="Name of the file to be read")
-parser.add_argument("-o", "--output_filename",
-                    type=str,
-                    help="The basename to use for output file",
-                    default='logNormal.gct')
-
-args = parser.parse_args()
+import sys
 
 ## Log Normalize:
 
-input = pd.read_csv(args.filename, delimiter="\t")
+input = pd.read_csv(sys.argv[1], delimiter="\t")
 ## To normalize by row swap rows and columns
 inputT = input.T
 for column in inputT.columns:
@@ -29,10 +16,7 @@ for column in inputT.columns:
     inputT[column] = np.log(inputT[column])
 
 input = inputT.T
-#gpserver = gp.GPServer('https://cloud.genepattern.org/gp','myusername', 'mypassword')
-out_filename = parser.output_filname
-if not out_filename.endswith('.gct'):
-        out_filename = out_filename + '.gct'
+out_filename = "output.gct"
 
 transformedData = input.to_csv("data_df", sep = "\t")
 with open(transformedData, 'r'):
